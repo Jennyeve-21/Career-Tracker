@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>CareerPath</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;600&display=swap">
+<style>
+:root{--bg:#f2f4f8;--card:#fff;--ink:#172033;--mut:#667085;--line:#e3e7ee;--pri:#0e7c7b;--soft:#dff3f2;--dng:#dc2626;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+:root:not([data-theme=light]){}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0f1420;--card:#171e2e;--ink:#e8ecf4;--mut:#94a0b8;--line:#263046;--pri:#2dd4bf;--soft:#12363a}}
+:root[data-theme=dark]{--bg:#0f1420;--card:#171e2e;--ink:#e8ecf4;--mut:#94a0b8;--line:#263046;--pri:#2dd4bf;--soft:#12363a}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 Figtree,system-ui,sans-serif}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;margin:0;letter-spacing:-.02em}
+h1{font-size:2.3rem;font-weight:800}h2{font-size:1.5rem}h3{font-size:1.05rem}
+.app{display:grid;grid-template-columns:210px 1fr;min-height:100vh}
+#nav{position:sticky;top:0;height:100vh;padding:20px 12px;border-right:1px solid var(--line);background:var(--card);display:flex;flex-direction:column;gap:4px}
+#nav:before{content:'CareerPath';font:800 1.2rem 'Bricolage Grotesque',sans-serif;padding:0 10px 14px;color:var(--pri)}
+#nav button{display:flex;gap:10px;align-items:center;border:0;background:none;color:var(--ink);padding:9px 10px;border-radius:10px;font:inherit;cursor:pointer;text-align:left}
+#nav button.on{background:var(--soft);color:var(--pri);font-weight:600}
+#main{padding:28px clamp(16px,4vw,44px) 40px;max-width:1200px;width:100%;min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 14px}
+.top,.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.row{margin:0 0 8px}
+.m{color:var(--mut);font-size:.85rem}.grow{flex:1}.strike{text-decoration:line-through;color:var(--mut)}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;padding:7px 13px;cursor:pointer}
+button.pri{background:var(--pri);border-color:var(--pri);color:#fff;font-weight:600}
+:root[data-theme=dark] button.pri{color:#06201f}
+button.dng{color:var(--dng)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+.bar{height:10px;background:var(--line);border-radius:9px;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:var(--pri);border-radius:9px}
+.hero{padding:26px;border-radius:20px;background:var(--soft);border:1px solid var(--line);margin-bottom:18px}
+.hero .big{font:800 clamp(2.4rem,7vw,4rem)/1 'Bricolage Grotesque',sans-serif;color:var(--pri)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+.stat b{display:block;font:800 1.6rem 'Bricolage Grotesque',sans-serif}
+.tcard{cursor:pointer;margin:0}.tcard:hover{border-color:var(--pri)}
+.item{display:flex;align-items:center;gap:10px;padding:9px 6px;border-top:1px solid var(--line);cursor:pointer}
+.item .m{margin-left:auto}
+.dot{width:10px;height:10px;border-radius:50%;background:#9aa4b5;flex:none}
+[data-s=Completed]{background:#16a34a}[data-s="In Progress"]{background:#2563eb}[data-s=Dropped]{background:#dc2626}[data-s=Retake]{background:#eab308}
+.tag{font-size:.75rem;padding:2px 9px;border-radius:99px;background:var(--line)}
+.tag[data-p=Urgent]{background:#fee2e2;color:#b91c1c}.tag[data-p=High]{background:#ffedd5;color:#c2410c}
+.board{display:flex;gap:12px;overflow-x:auto;padding-bottom:10px;align-items:flex-start}
+.col{flex:0 0 220px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;min-height:120px}
+.col h3{font-size:.9rem;margin-bottom:8px}
+.kc{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px;margin-bottom:8px;cursor:grab}
+.term .item:first-of-type{border-top:0}
+.empty{text-align:center;padding:38px 16px;color:var(--mut)}.empty b{display:block;color:var(--ink);font-size:1.1rem;margin-bottom:4px}.empty button{margin-top:12px}
+#modal{display:none;position:fixed;inset:0;background:rgba(10,15,30,.55);z-index:9;align-items:center;justify-content:center;padding:16px}
+#modal.open{display:flex}#modal form{width:min(460px,100%);max-height:90vh;overflow:auto;margin:0}
+label{display:block;margin:10px 0 0;font-size:.85rem;color:var(--mut)}label.ck{display:flex;gap:8px;color:var(--ink);font-size:1rem}
+input:not([type=checkbox]),select,textarea{display:block;width:100%;margin-top:4px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:90px}#modal .row{margin-top:16px}
+.seg button.on{background:var(--soft);color:var(--pri);border-color:var(--pri)}
+table{width:100%;border-collapse:collapse}th,td{padding:9px 8px;border-top:1px solid var(--line);text-align:left;vertical-align:top}th{border-top:0;color:var(--mut);font-weight:600;font-size:.85rem}tr[data-a]{cursor:pointer}tr[data-a]:hover{background:var(--soft)}.scroll{overflow-x:auto}
+@media(max-width:760px){
+.app{display:block}
+#nav{position:fixed;top:auto;bottom:0;left:0;right:0;height:auto;flex-direction:row;overflow-x:auto;z-index:5;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));border:0;border-top:1px solid var(--line)}
+#nav:before{display:none}#nav button{flex-direction:column;gap:0;padding:6px 10px;font-size:.7rem;flex:none}
+#main{padding-bottom:96px}h1{font-size:1.8rem}}
+</style></head>
+<body><div class="app"><nav id="nav"></nav><main id="main"></main></div><div id="modal"></div>
+<script>
+const $=s=>document.querySelector(s),uid=()=>Math.random().toString(36).slice(2,9),KEY='careerpath.v1';
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const ST=['Completed','In Progress','Planned','Dropped','Retake'],TS=['Not Started','In Progress','Completed'],PR=['Low','Medium','High','Urgent'];
+const TT=['Homework','Assignment','Project','Exam','Quiz','Lab','Presentation','Reading','Study session','Other'];
+const STG=['Interested','Preparing','Applied','Online Assessment','Interview','Final Interview','Offer','Accepted','Rejected','Withdrawn'];
+const META={degree:['🎓','Degree Plan'],tasks:['📚','College Tasks'],interns:['💼','Internships'],vol:['🤝','Volunteering']};
+const GP={A:4,'A-':3.7,'B+':3.3,B:3,'B-':2.7,'C+':2.3,C:2,'C-':1.7,D:1,F:0};
+let S=load(),V='dash',D=null;S.custom=S.custom||[];
+function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r)}catch(e){}
+return{setup:false,profile:{},credits:120,terms:[],tasks:[],interns:[],vol:[],on:Object.keys(META),theme:'auto',tv:'list'}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const bar=p=>`<div class=bar><i style="width:${p}%"></i></div>`;
+const empty=(t,s,l,a)=>`<div class="card empty"><b>${t}</b>${s}<br><button class=pri data-a=${a}>${l}</button></div>`;
+function cred(){let done=0,prog=0,pts=0,gc=0;S.terms.forEach(t=>t.courses.forEach(c=>{const n=+c.credits||0;
+if(c.status=='Completed'){done+=n;const g=GP[(c.grade||'').trim().toUpperCase()];if(g!=null){pts+=g*n;gc+=n}}else if(c.status=='In Progress')prog+=n}));
+return{done,prog,rem:Math.max(0,S.credits-done-prog),pct:S.credits?Math.min(100,Math.round(done/S.credits*100)):0,gpa:gc?(pts/gc).toFixed(2):''}}
+function bk(t){if(t.status=='Completed')return'Completed';if(!t.due)return'Upcoming';const T=iso(new Date()),n=iso(new Date(Date.now()+864e5)),w=iso(new Date(Date.now()+7*864e5));
+return t.due<T?'Overdue':t.due==T?'Today':t.due==n?'Tomorrow':t.due<=w?'This week':'Upcoming'}
+const hours=()=>S.vol.reduce((a,v)=>a+(+v.hours||0),0);
+/* ---------- modal form ---------- */
+function form(title,fields,v,ok,del,label='Save'){const m=$('#modal');
+m.innerHTML=`<form class=card>${'<h3>'+title+'</h3>'}${fields.map(([k,l,t,o])=>t=='check'?`<label class=ck><input type=checkbox name=${k} ${v[k]?'checked':''}>${l}</label>`:
+`<label>${l}${t=='select'?`<select name=${k}>${o.map(x=>`<option ${v[k]==x?'selected':''}>${x}</option>`).join('')}</select>`:t=='area'?`<textarea name=${k}>${esc(v[k])}</textarea>`:`<input name=${k} type=${t} value="${esc(v[k])}">`}</label>`).join('')}
+<div class=row><span><button class=pri>${label}</button> <button type=button data-x>Cancel</button></span>${del?'<button type=button class=dng data-del>Delete</button>':''}</div></form>`;
+m.className='open';const f=m.firstChild,close=()=>m.className='';
+f.onsubmit=e=>{e.preventDefault();const o={};fields.forEach(([k,,t])=>o[k]=t=='check'?f.elements[k].checked:f.elements[k].value);
+if(ok(o)!==1){close();save();render()}};
+f.querySelector('[data-x]').onclick=close;
+if(del)f.querySelector('[data-del]').onclick=()=>{if(confirm('Delete this item?')){del();close();save();render()}}}
+$('#modal').addEventListener('click',e=>{if(e.target.id=='modal')e.target.className=''});
+const M=k=>{if(k.startsWith('c_')){const c=S.custom.find(x=>'c_'+x.id==k);return c?[c.icon,c.name]:['📌','Tracker']}return META[k]};
+const cs=k=>{const c=S.custom.find(x=>'c_'+x.id==k);return c?c.items.length+' items':''};
+const FT={text:'text',number:'number',date:'date',dropdown:'select',checkbox:'check',url:'url','long text':'area'};
+const fsrc=c=>c.fields.map(f=>[f.label,Object.keys(FT).find(k=>FT[k]==f.type),...(f.opts?[f.opts.join(', ')]:[])].join(' | ')).join('\n');
+function trkForm(c){const n=!c;form(n?'Create your tracker':'Edit tracker',[['name','Tracker name','text'],['icon','Icon (an emoji)','text'],['desc','Description','text'],['spec','Fields, one per line: Name | type | options. Types: text, number, date, dropdown, checkbox, url, long text','area']],
+n?{icon:'🎯',spec:'Name | text\nStatus | dropdown | Idea, In progress, Done\nDate | date\nNotes | long text'}:{name:c.name,icon:c.icon,desc:c.desc,spec:fsrc(c)},v=>{
+const old=n?[]:c.fields;const fields=v.spec.split('\n').filter(x=>x.trim()).map(l=>{const[a,b,o]=l.split('|').map(x=>x.trim());const k=FT[(b||'text').toLowerCase()]?(b||'text').toLowerCase():'text';const f=old.find(x=>x.label==a);
+const op=k=='dropdown'?(o||'').split(',').map(x=>x.trim()).filter(Boolean):null;return{id:f?f.id:uid(),label:a,type:FT[k],opts:op?(op.length?op:['Option 1']):undefined}});
+if(!fields.length)fields.push({id:uid(),label:'Name',type:'text'});
+const d={name:v.name||'Untitled tracker',icon:v.icon||'📌',desc:v.desc||'',fields};
+if(n){const id=uid();S.custom.push({id,...d,items:[]});S.on.push('c_'+id);V='c_'+id}else Object.assign(c,d)},
+n?null:()=>{S.on=S.on.filter(k=>k!='c_'+c.id);S.custom=S.custom.filter(x=>x.id!=c.id);V='dash'})}
+function vCustom(id){const c=S.custom.find(x=>x.id==id),F=c.fields;
+return`<div class=top><div><h2>${esc(c.icon)} ${esc(c.name)}</h2><div class=m>${esc(c.desc)}</div></div><span><button data-a=edittrk>Edit tracker</button> <button class=pri data-a=additem>+ Add item</button></span></div>
+${c.items.length?`<div class="card scroll"><table><tr>${F.map(f=>`<th>${esc(f.label)}</th>`).join('')}</tr>${c.items.map(i=>`<tr data-a=edititem data-id=${i.id}>${F.map(f=>`<td>${f.type=='check'?(i[f.id]?'✓':''):esc(i[f.id])}</td>`).join('')}</tr>`).join('')}</table></div>`
+:empty('No items yet.','Add your first entry to start tracking.','+ Add item','additem')}`}
+/* ---------- views ---------- */
+function vDash(){if(!S.setup)return empty('Welcome to CareerPath!','Set up your name, school, and first semester to build your tracker.','Start setup','wiz');
+const c=cred(),p=S.profile,n=S.tasks.filter(t=>t.status=='Completed').length,up=S.tasks.filter(t=>['Today','Tomorrow','This week'].includes(bk(t))).length,ap=S.interns.filter(i=>STG.indexOf(i.stage)>=2).length;
+const sm={degree:`${c.pct}% complete`,tasks:`${up} due this week`,interns:`${ap} applied`,vol:`${hours()} hours`};
+const g=p.grad?new Date(p.grad+'-02').toLocaleString('en',{month:'long',year:'numeric'}):'';
+return`<div class=hero><div class=top><div><h1>My Career Tracker</h1><div class=m>${[p.name,p.major,p.uni,g&&'Graduating '+g].filter(Boolean).map(esc).join(' · ')}</div></div></div>
+<div class=big>${c.pct}%</div><div class=m>${c.done} of ${S.credits} credits${c.gpa?' · GPA '+c.gpa:''}</div>${bar(c.pct)}</div>
+<div class=grid>${[['Credits in progress',c.prog],['Credits remaining',c.rem],['Tasks completed',n],['Upcoming deadlines',up],['Applications',ap],['Volunteer hours',hours()]].map(([l,v])=>`<div class="card stat" style="margin:0"><b>${v}</b><span class=m>${l}</span></div>`).join('')}</div>
+<div class=top><h2>Your trackers</h2><span><span class=m>Drag cards to reorder</span> <button class=pri data-a=nav data-id=newtrk>+ Create custom tracker</button></span></div>
+${S.on.length?`<div class=grid>${S.on.map(k=>`<div class="card tcard" draggable=true data-drag="card:${k}" data-drop="card:${k}" data-a=nav data-id=${k}><h3>${esc(M(k)[0])} ${esc(M(k)[1])}</h3><div class=m>${sm[k]||cs(k)}</div></div>`).join('')}</div>`:empty('No trackers on','Turn trackers on in Settings.','Open settings','set')}`}
+function vDegree(){const c=cred();
+return`<div class=top><h2>🎓 Degree Plan</h2><button class=pri data-a=addterm>+ Add term</button></div>
+<div class=card><div class=row><b>${c.pct}% complete</b><span class=m>${c.done}/${S.credits} credits · ${c.prog} in progress · ${c.rem} remaining${c.gpa?' · GPA '+c.gpa:''}</span></div>${bar(c.pct)}</div>
+${S.terms.length?S.terms.map(t=>`<section class="card term" data-drop="term:${t.id}"><div class=top><h3>${esc(t.name)}</h3><span><button data-a=addcourse data-id=${t.id}>+ Course</button> <button data-a=editterm data-id=${t.id}>Rename</button></span></div>
+${t.courses.length?t.courses.map(x=>`<div class=item draggable=true data-drag="course:${x.id}" data-a=editcourse data-id=${x.id}><i class=dot data-s="${x.status}"></i><b>${esc(x.code)}</b> ${esc(x.name)}<span class=m>${+x.credits||0} cr${x.grade?' · '+esc(x.grade):''} · ${x.status}</span></div>`).join(''):'<p class=m>No courses yet. Add one, or drag a course here from another term.</p>'}</section>`).join('')
+:empty('Your degree plan is empty.','Add your first semester to get started.','+ Add semester','addterm')}`}
+function trow(t){const o=bk(t)=='Overdue';return`<div class=item draggable=true data-drag="task:${t.id}"><input type=checkbox data-a=tog data-id=${t.id} ${t.status=='Completed'?'checked':''} aria-label="Done">
+<span class=grow data-a=edittask data-id=${t.id}><b class="${t.status=='Completed'?'strike':''}">${esc(t.title)}</b> <span class=m>${esc(t.course)}${t.type?' · '+esc(t.type):''}</span></span><span class=tag data-p=${t.priority}>${t.priority}</span><span class=m style="${o?'color:var(--dng)':''}">${t.due||''}</span></div>`}
+function vTasks(){const L=S.tv=='list',by=(a,b)=>(a.due||'9')<(b.due||'9')?-1:1;
+const body=!S.tasks.length?empty('No tasks yet.','Track homework, exams, labs, and projects in one place.','+ Add task','addtask'):L?
+['Overdue','Today','Tomorrow','This week','Upcoming','Completed'].map(g=>{const a=S.tasks.filter(t=>bk(t)==g).sort(by);return a.length?`<div class=card><h3>${g} <span class=m>${a.length}</span></h3>${a.map(trow).join('')}</div>`:''}).join('')
+:`<div class=board>${TS.map(s=>`<div class=col data-drop="tstat:${s}"><h3>${s}</h3>${S.tasks.filter(t=>t.status==s).sort(by).map(t=>`<div class=kc draggable=true data-drag="task:${t.id}" data-a=edittask data-id=${t.id}><b>${esc(t.title)}</b><div class=m>${esc(t.course)} ${t.due?'· '+t.due:''}</div><span class=tag data-p=${t.priority}>${t.priority}</span>${bk(t)=='Overdue'?' <span class=tag data-p=Urgent>Overdue</span>':''}</div>`).join('')}</div>`).join('')}</div>`;
+return`<div class=top><h2>📚 College Tasks</h2><span class=seg><button class="${L?'on':''}" data-a=tv data-id=list>List</button> <button class="${L?'':'on'}" data-a=tv data-id=board>Board</button> <button class=pri data-a=addtask>+ Add task</button></span></div>${body}`}
+function vInt(){const I=S.interns,n=l=>I.filter(i=>l.includes(i.stage)).length,ap=I.filter(i=>STG.indexOf(i.stage)>=2).length,
+r=x=>ap?Math.round(x/ap*100)+'%':'–',resp=n(['Online Assessment','Interview','Final Interview','Offer','Accepted','Rejected']),iv=n(['Interview','Final Interview','Offer','Accepted']),of=n(['Offer','Accepted']);
+return`<div class=top><h2>💼 Internships</h2><button class=pri data-a=addint>+ Add internship</button></div>
+${I.length?`<div class=grid>${[['Applied',ap],['Interviews',iv],['Offers',of],['Rejections',n(['Rejected'])],['Response rate',r(resp)],['Interview rate',r(iv)],['Offer rate',r(of)]].map(([l,v])=>`<div class="card stat" style="margin:0"><b>${v}</b><span class=m>${l}</span></div>`).join('')}</div>
+<div class=board>${STG.map(s=>`<div class=col data-drop="stage:${s}"><h3>${s} <span class=m>${I.filter(i=>i.stage==s).length}</span></h3>${I.filter(i=>i.stage==s).map(i=>`<div class=kc draggable=true data-drag="int:${i.id}" data-a=editint data-id=${i.id}><b>${esc(i.company)}</b><div class=m>${esc(i.role)}${i.deadline?' · due '+i.deadline:''}</div></div>`).join('')}</div>`).join('')}</div>`
+:empty('No internships yet.','Start tracking your applications and keep everything in one place.','+ Add internship','addint')}`}
+function vVol(){const y=String(new Date().getFullYear()),mo={};S.vol.filter(v=>(v.date||'').startsWith(y)).forEach(v=>{const k=v.date.slice(5,7);mo[k]=(mo[k]||0)+(+v.hours||0)});const yt=Object.values(mo).reduce((a,b)=>a+b,0);
+return`<div class=top><h2>🤝 Volunteering</h2><button class=pri data-a=addvol>+ Log hours</button></div>
+${S.vol.length?`<div class=grid><div class="card stat" style="margin:0"><b>${hours()}</b><span class=m>Total hours</span></div><div class="card stat" style="margin:0"><b>${yt}</b><span class=m>${y} hours</span></div></div>
+${Object.keys(mo).length?`<div class=card><h3>${y} by month</h3>${Object.keys(mo).sort().map(k=>`<div class=row><span>${new Date(2000,k-1).toLocaleString('en',{month:'long'})}</span><b>${mo[k]} hrs</b></div>`).join('')}</div>`:''}
+<div class=card>${[...S.vol].sort((a,b)=>(b.date||'')<(a.date||'')?-1:1).map(v=>`<div class=item data-a=editvol data-id=${v.id}><b>${esc(v.org)}</b> ${esc(v.event)}<span class=m>${v.date||''} · ${+v.hours||0} hrs</span></div>`).join('')}</div>`
+:empty('No volunteering yet.','Log events and watch your hours add up.','+ Log hours','addvol')}`}
+function vSet(){return`<div class=top><h2>⚙️ Settings</h2></div>
+<div class=card><h3>Profile</h3><p class=m>${esc(S.profile.name||'No name yet')} · ${S.credits} credits needed</p><button data-a=prof>Edit profile</button></div>
+<div class=card><h3>Trackers</h3><p class=m>Turn trackers on or off. Hidden trackers keep their data.</p>${[...Object.keys(META),...S.custom.map(c=>'c_'+c.id)].map(k=>`<label class=ck><input type=checkbox data-a=trk data-id=${k} ${S.on.includes(k)?'checked':''}>${esc(M(k)[0])} ${esc(M(k)[1])}</label>`).join('')}</div>
+<div class=card><h3>Appearance</h3><span class=seg>${['auto','light','dark'].map(t=>`<button class="${S.theme==t?'on':''}" data-a=theme data-id=${t}>${{auto:'Auto',light:'☀️ Light',dark:'🌙 Dark'}[t]}</button>`).join(' ')}</span></div>
+<div class=card><h3>Your data</h3><p class=m>Saved in this browser. Copy the export text to back it up, or paste it back to restore.</p><button data-a=exp>Export data</button> <button data-a=imp>Import data</button> <button class=dng data-a=reset>Reset everything</button></div>`}
+function render(){if(V!='dash'&&V!='set'&&!S.on.includes(V))V='dash';document.documentElement.dataset.theme=S.theme;
+const nav=[['dash','🏠','Home'],...S.on.map(k=>[k,...M(k)]),['newtrk','➕','New tracker'],['set','⚙️','Settings']];
+$('#nav').innerHTML=nav.map(([k,i,l])=>`<button class="${V==k?'on':''}" data-a=nav data-id=${k}><span>${esc(i)}</span><span>${esc(l)}</span></button>`).join('');
+$('#main').innerHTML=V.startsWith('c_')?vCustom(V.slice(2)):({dash:vDash,degree:vDegree,tasks:vTasks,interns:vInt,vol:vVol,set:vSet})[V]()}
+/* ---------- forms ---------- */
+const CF=[['code','Course code','text'],['name','Course name','text'],['credits','Credit hours','number'],['status','Status','select',ST],['grade','Grade (e.g. A-)','text'],['prof','Professor','text'],['notes','Notes','area']];
+const TF=[['title','Task name','text'],['course','Course','text'],['type','Type','select',TT],['due','Due date','date'],['priority','Priority','select',PR],['status','Status','select',TS],['notes','Notes','area']];
+const IF=[['company','Company','text'],['role','Position','text'],['stage','Status','select',STG],['loc','Location','text'],['mode','Work mode','select',['On-site','Hybrid','Remote']],['deadline','Application deadline','date'],['interview','Interview date','date'],['url','Job posting URL','url'],['notes','Notes','area']];
+const VF=[['org','Organization','text'],['event','Event','text'],['date','Date','date'],['hours','Hours','number'],['loc','Location','text'],['notes','Notes','area']];
+const PF=[['name','Your name','text'],['uni','University','text'],['major','Major','text'],['grad','Expected graduation','month'],['credits','Credits needed to graduate','number']];
+const fc=id=>{for(const t of S.terms){const c=t.courses.find(x=>x.id==id);if(c)return[t,c]}};
+const parse=s=>(s||'').split('\n').filter(x=>x.trim()).map(l=>{const[a,b,c]=l.split('|').map(x=>x.trim());return{id:uid(),code:a||'',name:b||'',credits:+c||3,status:'Planned',grade:''}});
+function wizard(){form('Welcome to CareerPath! About you',PF,{credits:S.credits},v=>{S.profile={name:v.name,uni:v.uni,major:v.major,grad:v.grad};S.credits=+v.credits||120;
+form('Add your first semester',[['term','Semester name','text'],['courses','Courses, one per line: CODE | Name | credits','area']],{term:'Fall 2026'},w=>{if(w.term||w.courses)S.terms.push({id:uid(),name:w.term||'First term',courses:parse(w.courses)});
+form('Choose your trackers',Object.keys(META).map(k=>[k,META[k][0]+' '+META[k][1],'check']),Object.fromEntries(Object.keys(META).map(k=>[k,1])),z=>{S.on=Object.keys(META).filter(k=>z[k]);S.setup=true;V='dash'},null,'Build my dashboard');return 1},null,'Next');return 1},null,'Next')}
+function drop([k,id],to,v){
+if(k=='course'&&to=='term'){let c;S.terms.forEach(t=>{const i=t.courses.findIndex(x=>x.id==id);if(i>=0)c=t.courses.splice(i,1)[0]});if(c)S.terms.find(t=>t.id==v).courses.push(c)}
+if(k=='task'&&to=='tstat')S.tasks.find(t=>t.id==id).status=v;
+if(k=='int'&&to=='stage')S.interns.find(t=>t.id==id).stage=v;
+if(k=='card'&&to=='card'&&id!=v){S.on.splice(S.on.indexOf(id),1);S.on.splice(S.on.indexOf(v),0,id)}
+save();render()}
+document.addEventListener('dragstart',e=>{const d=e.target.closest&&e.target.closest('[data-drag]');if(d){D=d.dataset.drag.split(':');e.dataTransfer.effectAllowed='move';e.dataTransfer.setData('text/plain','x')}});
+document.addEventListener('dragover',e=>{if(D&&e.target.closest('[data-drop]'))e.preventDefault()});
+document.addEventListener('drop',e=>{const z=e.target.closest('[data-drop]');if(!D||!z)return;e.preventDefault();const[to,v]=z.dataset.drop.split(':');drop(D,to,v);D=null});
+document.addEventListener('dragend',()=>D=null);
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,id=b.dataset.id;
+const T=()=>S.terms.find(t=>t.id==id),K=()=>S.tasks.find(t=>t.id==id),N=()=>S.interns.find(t=>t.id==id),O=()=>S.vol.find(t=>t.id==id);
+const rm=(arr)=>()=>{S[arr]=S[arr].filter(x=>x.id!=id)};
+if(a=='nav'){if(id=='newtrk')trkForm();else{V=id;render()}}
+else if(a=='wiz')wizard();
+else if(a=='edittrk')trkForm(S.custom.find(x=>x.id==V.slice(2)));
+else if(a=='additem'){const c=S.custom.find(x=>x.id==V.slice(2));form('Add item',c.fields.map(f=>[f.id,f.label,f.type,f.opts]),{},v=>{c.items.push({id:uid(),...v})})}
+else if(a=='edititem'){const c=S.custom.find(x=>x.id==V.slice(2)),i=c.items.find(x=>x.id==id);form('Edit item',c.fields.map(f=>[f.id,f.label,f.type,f.opts]),i,v=>{Object.assign(i,v)},()=>{c.items=c.items.filter(x=>x.id!=id)})}
+else if(a=='addterm')form('Add term',[['name','Term name (e.g. Fall 2026)','text']],{},v=>{S.terms.push({id:uid(),name:v.name||'Untitled term',courses:[]})});
+else if(a=='editterm')form('Rename term',[['name','Term name','text']],T(),v=>{T().name=v.name},rm('terms'));
+else if(a=='addcourse')form('Add course',CF,{status:'Planned',credits:3},v=>{T().courses.push({id:uid(),...v})});
+else if(a=='editcourse'){const[t,c]=fc(id);form('Edit course',CF,c,v=>{Object.assign(c,v)},()=>{t.courses=t.courses.filter(x=>x.id!=id)})}
+else if(a=='addtask')form('Add task',TF,{type:'Homework',priority:'Medium',status:'Not Started'},v=>{S.tasks.push({id:uid(),...v})});
+else if(a=='edittask')form('Edit task',TF,K(),v=>{Object.assign(K(),v)},rm('tasks'));
+else if(a=='tog'){const t=K();t.status=t.status=='Completed'?'Not Started':'Completed';save();render()}
+else if(a=='tv'){S.tv=id;save();render()}
+else if(a=='addint')form('Add internship',IF,{stage:'Interested',mode:'On-site'},v=>{S.interns.push({id:uid(),...v})});
+else if(a=='editint')form('Edit internship',IF,N(),v=>{Object.assign(N(),v)},rm('interns'));
+else if(a=='addvol')form('Log volunteering',VF,{date:iso(new Date())},v=>{S.vol.push({id:uid(),...v})});
+else if(a=='editvol')form('Edit entry',VF,O(),v=>{Object.assign(O(),v)},rm('vol'));
+else if(a=='prof')form('Edit profile',PF,{...S.profile,credits:S.credits},v=>{S.profile={name:v.name,uni:v.uni,major:v.major,grad:v.grad};S.credits=+v.credits||120});
+else if(a=='trk'){S.on=b.checked?[...S.on,id]:S.on.filter(k=>k!=id);save();render()}
+else if(a=='theme'){S.theme=id;save();render()}
+else if(a=='exp')form('Export data',[['json','Copy this text to back up your tracker','area']],{json:JSON.stringify(S,null,1)},()=>{},null,'Done');
+else if(a=='imp')form('Import data',[['json','Paste exported data','area']],{},v=>{try{const d=JSON.parse(v.json);if(!d.terms||!d.on)throw 0;S=d;S.custom=S.custom||[]}catch(x){alert('That text is not a valid CareerPath export.');return 1}});
+else if(a=='reset'&&confirm('Delete all your data? This cannot be undone.')){try{localStorage.removeItem(KEY)}catch(x){}S=load();V='dash';render()}});
+render();
+</script></body></html>
